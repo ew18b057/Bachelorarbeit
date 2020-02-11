@@ -1,0 +1,13 @@
+header {
+    background-color: rgb(224, 52, 52);
+    text-align: center;
+    padding: 20px;
+  }
+
+hr {
+    background: #111;
+    border: none;
+    color: #111;
+    height: 3px;
+    width: 100%;
+   }
