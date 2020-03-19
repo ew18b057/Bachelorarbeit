@@ -1,13 +1,13 @@
 var tessel = require('tessel');
 
-tessel.port.A.pin[2].input();
+var pin = tessel.port.A.pin[2];
 
-function read() {
-    tessel.port.A.pin[2].read(function(error, data) {
-        console.log(data);
-        read();
-    });
-}
+pin.read(function(error, number){
+	if(error){
+		throw error;
+	}
+	console.log(number);
+});
 
 /*
 setInterval(function() {
