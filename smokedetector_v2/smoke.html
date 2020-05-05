@@ -1,0 +1,67 @@
+<html>
+
+<head>
+    <title>Smoke Detector</title>
+    <link rel="stylesheet" href="smoke.css">
+    <script src="smoke.js"></script>
+</head>
+
+<body>
+    <main id="app">
+        <h1>Smoke Detector</h1>
+
+        <!-- time section -->
+        <div id="datetime">
+            <section id="date"></section>
+            <section id="time"></section>
+        </div>
+        <div id="status">
+            <section id="heartbeat">
+                <data><time>15:00:14</time><data>
+        </section>
+        </div>
+      
+        <!-- content -->
+        <div id="content">
+        
+        <!-- alarm section and description -->
+        <section id="alarm">
+          <div>Alarm Status</div>
+          <div id="alarm-status">
+            <div class="" id="alarm-indicator"></div>
+              <p>Field above displays current state</p>
+              <p>if green everthing ok!</p>
+              <p>When turned red not ok!</p>
+            </div>
+        <div id="alarm-history">
+          <div>Recent Alarms</div>
+            <ol>
+              <li><time datetime="2017-02-14 14:54:39.929">2017-02-14 14:54</time></li>
+              <li><time datetime="2016-06-10 11:14:21.321">2016-06-10 11:14</time></li>
+              <li><time datetime="2016-02-14 13:54:42.192">2016-02-14 13:54</time></li>
+            </ol>
+          </div>
+        </section>
+        
+        <!-- test button section and description -->
+        <section id="test">
+          <div>Test</div>
+          <div id="test-control">
+           <button id="test-control-button">Start</button>
+            <p>Press button above to trigger test.</p>
+            <p>When pressed alarm turns red and ok!</p> 
+          </div>
+          <div id="test-history">
+            <div>Recent Tests</div>
+            <ol>
+              <li><time datetime="2017-02-14 14:54:39.929">2017-02-14 14:54</time></li>
+              <li><time datetime="2016-02-14 13:54:42.192">2016-02-14 13:54</time></li>
+              <li><time datetime="2015-02-14 10:21:49.229">2015-02-14 10:21</time></li>
+            </ol>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </body>
+</html>
