@@ -17,7 +17,7 @@ var server = http.createServer(function(request, response) {
 
     if (urlParts.pathname.match(alarm)) {
         // If there is a request containing the string 'alarm-test' call a function
-        toggleLED(urlParts.pathname, request, response);
+        alarmTest(urlParts.pathname, request, response);
     } else {
         // All other request will call a function, showIndex
         showIndex(urlParts.pathname, request, response);
@@ -50,12 +50,12 @@ function showIndex(url, request, response) {
 }
 
 // Toggle the led specified in the url and respond with its state
-function toggleLED(url, request, response) {
+function alarmTest(url, request, response) {
 
-    var led = tessel.led[2];
-    var pin = tessel.port.A.pin[7]; // Select pin 7 on port A
+    var ledGreen = tessel.led[2];
+    var pinTest = tessel.port.A.pin[7]; // Select pin 7 on port A
 
-    pin.toggle((error, buffer) => {
+    pinTest.toggle((error, buffer) => {
         if (error) {
             throw error;
         }
@@ -63,7 +63,7 @@ function toggleLED(url, request, response) {
 
 
     // Toggle the state of the led and call the callback after that's done
-    led.toggle(function(err) {
+    ledGreen.toggle(function(err) {
         if (err) {
             // Log the error, send back a 500 (internal server error) response to the client
             console.log(err);
