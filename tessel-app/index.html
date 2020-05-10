@@ -1,0 +1,59 @@
+<html>
+
+<head>
+    <title>Smoker Test</title>
+    <style>
+        body {
+            display: flex;
+            flex-flow: column nowrap;
+        }
+        
+        div {
+            background-color: green;
+        }
+        
+        .alarm {
+            background-color: red;
+        }
+    </style>
+    <script>
+        // Get a NodeList of element with the class 'alarmState'
+        var buttons = document.querySelectorAll('.alarmState');
+
+        // Iterate through that Nodelist and add a 'click' EventListener
+        Array.prototype.forEach.call(buttons, function(button) {
+            button.addEventListener('click', buttonHandler);
+        });
+
+        function buttonHandler(event) {
+            console.log(window.location);
+            window.location.assign(window.location.origin + "/alarm-test")
+            var button = event.target;
+
+            // Create a new XHR for communicating requests to our Tessel server
+            var req = new XMLHttpRequest();
+
+            // Open a GET request to '/leds/:index'
+            req.open('GET', '/alarm-test/');
+
+            // Once the request gets a successful response, update that statusNode with the status of the LED.
+            req.onload = function(e) {
+                if (req.readyState == 4 && req.status == 200) {
+                    var response = JSON.parse(req.responseText);
+                    statusNode.textContent = response.on ? 'ON' : 'OFF';
+                } else {
+                    console.log('Error', e); // If something went wrong, log that event to the console.
+                }
+            }
+            req.send(); // Send our request to the server
+        }
+    </script>
+</head>
+
+<body>
+    <h1>Smoke Detector</h1>
+    <div class="${alarmState ? " alarm " : " "}">Alarm</div>
+    <button onclick="buttonHandler()">Test</button>
+</body>
+
+</html>
