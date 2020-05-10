@@ -8,6 +8,36 @@ var http = require('http');
 var fs = require('fs');
 var url = require('url');
 
+// Alarm Pin and red Led declaration
+var alarmState = false;
+var pinAlarm = tessel.port.A.pin[2];
+var ledRed = tessel.led[0];
+
+
+
+
+// Alarm pin defined to pulldown for a clean GND signal of 0.0V
+pinAlarm.pull("pulldown");
+
+// variant polling, since status change from high/low and falling
+// and rising edges not detected reliably
+setInterval(readoutAlarmState, 100);
+
+function readoutAlarmState() {
+    pinAlarm.read((error, value) => {
+        console.log("DEBUG", "Interval", value)
+        if (value) {
+            console.log("PIN A2 read: alarm");
+            ledRed.on();
+            alarmState = true;
+        } else {
+            console.log("PIN A2 read: no alarm");
+            ledRed.off();
+            alarmState = false;
+        }
+    });
+}
+
 var server = http.createServer(function(request, response) {
     // Break up the url into easier-to-use parts
     var urlParts = url.parse(request.url, true);
@@ -17,10 +47,10 @@ var server = http.createServer(function(request, response) {
 
     if (urlParts.pathname.match(alarm)) {
         // If there is a request containing the string 'alarm-test' call a function
-        alarmTest(urlParts.pathname, request, response);
+        return alarmTest(urlParts.pathname, request, response);
     } else {
         // All other request will call a function, showIndex
-        showIndex(urlParts.pathname, request, response);
+        return showIndex(urlParts.pathname, request, response);
         // insert detection function of alarm here?? if alarm is detected
         // change div to red ? alarmState ?
     }
@@ -44,42 +74,25 @@ function showIndex(url, request, response) {
             throw err;
         }
 
-        // Serve the content of index.html read in by fs.readFile
-        response.end(content);
+        // Serve the content of index.html read in by fs.readFile 
+        // replace placeholder with string
+        response.end(content.toString().replace("$$alarm$$", alarmState ? "class='alarm'" : ""));
     });
 }
 
-// Toggle the led specified in the url and respond with its state
+// Toggle test pin and green led in the url and respond with to home page again
+
 function alarmTest(url, request, response) {
 
     var ledGreen = tessel.led[2];
-    var pinTest = tessel.port.A.pin[7]; // Select pin 7 on port A
+    var pinTest = tessel.port.A.pin[7];
 
     pinTest.toggle((error, buffer) => {
         if (error) {
             throw error;
         }
     });
-
-
-    // Toggle the state of the led and call the callback after that's done
-    ledGreen.toggle(function(err) {
-        if (err) {
-            // Log the error, send back a 500 (internal server error) response to the client
-            console.log(err);
-            response.writeHead(500, { "Content-Type": "application/json" });
-            response.end(JSON.stringify({ error: err }));
-        } else {
-            fs.readFile(__dirname + '/index.html', function(err, content) {
-                // If there was an error, throw to stop code execution
-                if (err) {
-                    throw err;
-                }
-
-                // Serve the content of index.html read in by fs.readFile
-                response.end(content);
-            });
-
-        }
-    });
+	// respond with status code 302 and redirect to homepage
+    ledGreen.toggle();
+    response.writeHead(302, { Location: "/" });
 }
